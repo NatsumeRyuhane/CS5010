@@ -1,0 +1,131 @@
+package test;
+import bignumber.*;
+
+import org.junit.*;
+
+
+public class BigNumberTest {
+    @Test
+    public void bigNumberConstructorTest() {
+        BigNumber bigNumber = new BigNumberImpl("12345");
+        Assert.assertEquals("12345", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("0");
+        Assert.assertEquals("0", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("999999999999999999");
+        Assert.assertEquals("999999999999999999", bigNumber.toString());
+    }
+
+    @Test
+    public void bigNumberConstructorTestLongNumber() {
+        String numberString1 = "12345678901234567812345678901234567890123456781234567890123456789012345678123456789012123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234512345678901234567812345678901234567890123456781234567890123456789012345678123456789012345678901234567890123456789012345123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234512345678901234567812345678901234567890123456781234567890123456789012345678123456789012345678901234567890123456789012345123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234512345678901234567812345678901234567890123456781234567890123456789012345678123456789012345678901234567890123456789012345123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234534567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+        String numberString2 = "133345678901234567812345678901234567890123456781234567890123456789012345678123456789012123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234512345678901234567812345678901234567890123456781234567890123456789012345678123456789012345678901234567890123456789012345123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234512345678901234567812345678901234567890123456781234567890123456789012345678123456789012345678901234567890123456789012345123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234512345678901234567812345678901234567890123456781234567890123456789012345678123456789012345678901234567890123456789012345123456789012345678123456789012345678901234567812345678901234567890123456781234567890123456789012345678901234567890123451234567890123456781234567890123456789012345678123456789012345678901234567812345678901234567890123456789012345678901234534567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+
+        BigNumber bigNumber1 = new BigNumberImpl(numberString1);
+        BigNumber bigNumber2 = new BigNumberImpl(numberString2);
+        Assert.assertEquals(numberString1, bigNumber1.toString());
+        Assert.assertEquals(-1, bigNumber1.toString().compareTo(bigNumber2.toString()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void bigNumberConstructorTestInvalid1() {
+        BigNumberImpl bigNumber = new BigNumberImpl("12345a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void bigNumberConstructorTestInvalid2() {
+        BigNumberImpl bigNumber = new BigNumberImpl("-1");
+    }
+
+    @Test
+    public void shiftLeftTest() {
+        BigNumber bigNumber = new BigNumberImpl("12345");
+        bigNumber.shiftLeft(1);
+        Assert.assertEquals("123450", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("12345");
+        bigNumber.shiftLeft(10);
+        Assert.assertEquals("123450000000000", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("0");
+        bigNumber.shiftLeft(999);
+        Assert.assertEquals("0", bigNumber.toString());
+    }
+
+    @Test
+    public void shiftRightTest() {
+        BigNumber bigNumber = new BigNumberImpl("123450000000000");
+        bigNumber.shiftRight(1);
+        Assert.assertEquals("12345000000000", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("123450000000000");
+        bigNumber.shiftRight(10);
+        Assert.assertEquals("12345", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("123450000000000");
+        bigNumber.shiftRight(13);
+        Assert.assertEquals("12", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("123450000000000");
+        bigNumber.shiftRight(999);
+        Assert.assertEquals("0", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("0");
+        bigNumber.shiftRight(999);
+        Assert.assertEquals("0", bigNumber.toString());
+    }
+
+    @Test
+    public void addDigitTest() {
+        BigNumber bigNumber = new BigNumberImpl("12345");
+        bigNumber.addDigit(1);
+        Assert.assertEquals("12346", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl("99999");
+        bigNumber.addDigit(9);
+        Assert.assertEquals("100008", bigNumber.toString());
+
+        bigNumber = new BigNumberImpl();
+        bigNumber.addDigit(9);
+        Assert.assertEquals("9", bigNumber.toString());
+    }
+
+    @Test
+    public void getDigitAtTest() {
+        BigNumber bigNumber = new BigNumberImpl("12345");
+        Assert.assertEquals(5, bigNumber.getDigitAt(0));
+        Assert.assertEquals(4, bigNumber.getDigitAt(1));
+        Assert.assertEquals(3, bigNumber.getDigitAt(2));
+        Assert.assertEquals(2, bigNumber.getDigitAt(3));
+        Assert.assertEquals(1, bigNumber.getDigitAt(4));
+    }
+
+    @Test
+    public void addNumbersTest() {
+        BigNumber bigNumber1 = new BigNumberImpl("1");
+        BigNumber bigNumber2 = new BigNumberImpl("1");
+        Assert.assertEquals("2", bigNumber1.add(bigNumber2).toString());
+
+        bigNumber1 = new BigNumberImpl("123456789");
+        bigNumber2 = new BigNumberImpl("987654321");
+        Assert.assertEquals("1111111110", bigNumber1.add(bigNumber2).toString());
+
+        bigNumber1 = new BigNumberImpl("999999999");
+        bigNumber2 = new BigNumberImpl("1");
+        Assert.assertEquals("1000000000", bigNumber1.add(bigNumber2).toString());
+
+        bigNumber1 = new BigNumberImpl("1");
+        bigNumber2 = new BigNumberImpl();
+        Assert.assertEquals("1", bigNumber1.add(bigNumber2).toString());
+    }
+
+    @Test
+    public void addNumbersTestLongNumbers() {
+        String numberString1 = "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999";
+        String numberString2 = "1";
+        BigNumber bigNumber1 = new BigNumberImpl(numberString1);
+        BigNumber bigNumber2 = new BigNumberImpl(numberString2);
+        Assert.assertEquals("1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", bigNumber1.add(bigNumber2).toString());
+    }
+}
